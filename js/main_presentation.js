@@ -67,7 +67,7 @@ function checkIfWord() {
 	word = word.replaceAll(",", "");
 	word = word.replace("]", "");
 	word = word.replaceAll('"', '');
-	console.log(word);
+	//console.log(word);
 	
 	//check to see if the word is valid
 	var req2 = new XMLHttpRequest();
@@ -76,7 +76,7 @@ function checkIfWord() {
 	req2.onreadystatechange = function() {
 		if (req2.readyState == 4) {
 			text = req2.responseText;
-			console.log(text);
+			//console.log(text);
 			if (text.includes('"meta":')) {
 				valid = true;
 				scoreSubmission();
@@ -86,7 +86,7 @@ function checkIfWord() {
 				alert("Please enter a valid English word.");
 				clearGuess();
 			}
-			console.log(valid);
+			//console.log(valid);
 		}
 	}
 	req2.send();
@@ -159,16 +159,16 @@ function newRow() {
 
 async function submitGuess() {
 	
-	console.log(solution);
+	//console.log(solution);
 	
 	await checkIfWord();
 	
-	console.log(valid);
+	//console.log(valid);
 }
 
 function scoreSubmission() {
 	
-	console.log(valid);
+	//console.log(valid);
 	currentGame.solution = solution;
 	solutionArray = solutionArr();
 	
