@@ -1,0 +1,89 @@
+/* CSS Document */
+@charset "UTF-8";
+
+body {
+  padding: 0;
+  font-family: "Open Sans Condensed", sans-serif;
+  background-color: #acc9f4;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 1.5em;
+  color: #569873;
+  font-weight: bold;
+}
+
+h2 {
+  margin-top: .3em;
+  margin-left: 2em;
+  font-size: 1.4em;
+  color: #0074D9;
+}
+
+h3 {
+  font-size: 1.2em;
+  color: black;
+  text-align: center;
+}
+
+p {
+  margin-left: 2.1em;
+  margin-top: 1em;
+  font-size: 1.3em;
+}
+
+a {
+  color: #0074D9;
+}
+
+.mybutton {
+	margin-top: 1.5em;
+	margin-bottom: 2em;
+	width: 100%;
+}
+
+#row1 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: auto;
+}
+
+#whoseTurn {
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+.boxes {
+	display: inline-block;
+	width: 20%;
+	border: 1px solid black;
+	text-align: center;
+	margin: auto;
+	font-size: 3.5em;
+	margin-bottom: .5em;
+}
+
+.letters {
+	height: .5em;
+}
+
+.qwerty {
+	font-size: 1em;
+	display: inline-block;
+	width: 8%;
+	height: 2em;
+	border: 1px solid black;
+	text-align: center;
+	margin: .2em;
+}
+
+button {
+	margin-top: .5em;
+}
+
+#playAgain{
+	visibility: hidden;
+	margin-bottom: 10px;
+}
