@@ -47,17 +47,16 @@ function checkIfWord() {
 	word = word.replaceAll('"', '');
 	console.log(word);
 	
-	req2.open("GET", "https://dictionary-by-api-ninjas.p.rapidapi.com/v1/dictionary?word="+word);
-	req2.setRequestHeader("X-RapidAPI-Key", "d5854d4252msha90e3c0562d13e4p17f839jsn0992e24ab6da");
-	req2.setRequestHeader("X-RapidAPI-Host", "dictionary-by-api-ninjas.p.rapidapi.com");
-	req2.onreadystatechange = function() {
-		if (req2.readyState == 4) {
-			text = req2.responseText;
-			valid = text["valid"];
-			console.log(valid);
+		req.open("GET", "https://random-words5.p.rapidapi.com/getRandom?wordLength=5");
+	req.setRequestHeader("X-RapidAPI-Key", "d5854d4252msha90e3c0562d13e4p17f839jsn0992e24ab6da");
+	req.setRequestHeader("X-RapidAPI-Host", "random-words5.p.rapidapi.com");
+	req.onreadystatechange = function() {
+		if (req.readyState == 4) {
+			solution = req.responseText;
 		}
 	}
-	req2.send();
+	req.send();
+	console.log(solution);
 }
 
 
