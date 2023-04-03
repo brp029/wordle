@@ -1,5 +1,5 @@
 window.onload = function() {
-	getSolution();
+	//getSolution();
 	newGame();
 	buildBoard();
 	
@@ -9,7 +9,7 @@ window.onload = function() {
 	})
 	
 	document.getElementById("playAgain").addEventListener("click", newGame);
-	document.getElementById("debugMode").addEventListener("click", debugMode);
+	document.getElementById("debugMode").addEventListener("click", debugModeOn);
 	document.getElementById("clearGuess").addEventListener("click", clearGuess);
 	document.getElementById("submitGuess").addEventListener("click", submitGuess);
 } //end window.onload
@@ -67,7 +67,6 @@ function checkIfWord() {
 	word = word.replaceAll(",", "");
 	word = word.replace("]", "");
 	word = word.replaceAll('"', '');
-	//console.log(word);
 	
 	//check to see if the word is valid
 	var req2 = new XMLHttpRequest();
@@ -76,7 +75,6 @@ function checkIfWord() {
 	req2.onreadystatechange = function() {
 		if (req2.readyState == 4) {
 			text = req2.responseText;
-			//console.log(text);
 			if (text.includes('"meta":')) {
 				valid = true;
 				scoreSubmission();
@@ -86,7 +84,6 @@ function checkIfWord() {
 				alert("Please enter a valid English word.");
 				clearGuess();
 			}
-			//console.log(valid);
 		}
 	}
 	req2.send();
@@ -159,16 +156,12 @@ function newRow() {
 
 async function submitGuess() {
 	
-	//console.log(solution);
-	
 	await checkIfWord();
-	
-	//console.log(valid);
+
 }
 
 function scoreSubmission() {
 	
-	//console.log(valid);
 	currentGame.solution = solution;
 	solutionArray = solutionArr();
 	
@@ -223,23 +216,42 @@ function selectedLetter () {
 function checkCorrect() {
 	
 	// check if there are duplicate letters in the array
-	let dupeCheck = solutionArray.some((val, i) => solutionArray.indexOf(val) !== i); // if true, there are dupilates in the array
+	let dupeCheck = solutionArray.some((val, i) => solutionArray.indexOf(val) !== i); // if true, there are dupilates in the solution array
+	let guessDupeCheck = values.some((val, i) => values.indexOf(val) !== i); // if true, there are duplicates in the guess
+	
 	//compare solution to guess
 	for (i = 0; i < 5; i++) {
 		if (solutionArray[i] == values[i]){  	//if correctly placed, turn green
 			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "green";
 			document.getElementById(values[i]).style.backgroundColor = "green";
 		}
-		else if	(solutionArray.indexOf(values[i]) != -1) {  //if incorrectly placed, turn yellow
+		else if	(solutionArray.indexOf(values[i]) != -1) {  //if incorrectly placed
+			// check for exact match of this letter
+			anyCorrectDupe = false;
+			for (k = 0; k < 5; k++) {
+				if (solutionArray[k] == values[k]){
+					anyCorrectDupe = true;
+				}
+			}
+			if (anyCorrectDupe == true) {
+				document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "gray";
+				document.getElementById(values[i]).style.backgroundColor = "gray";
+			}
+			else if (values.indexOf(values[i]) == i) {// if no exact match, is this the first intance?
 			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "yellow";
 			document.getElementById(values[i]).style.backgroundColor = "yellow";
+			}
+			else {// if no exact match and not first instance, turn grey
+			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "gray";
+			document.getElementById(values[i]).style.backgroundColor = "gray";
+			}
 		}
 		else {  //if not in solution, turn grey
 			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "gray";
 			document.getElementById(values[i]).style.backgroundColor = "gray";
 		}
-	}
-}
+	}//end for loop
+	} //end function
 
 function checkWin() {
 	
@@ -250,11 +262,10 @@ function checkWin() {
 	} 
 }
 
-function debugMode() {
+function debugModeOn() {
 	currentGame.debugMode = "on";
 	document.getElementById("debugMode").style.visibility = "hidden";
-	console.log("Debug Mode Engaged. The solution is: " + currentGame.solution);
-	
+	document.getElementById("debugMessage").innerHTML = "Debug Mode Engaged. The solution is " + solution + ".";
 }
 
 function clearGuess() {
