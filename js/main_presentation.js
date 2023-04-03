@@ -14,7 +14,7 @@ window.onload = function() {
 	document.getElementById("submitGuess").addEventListener("click", submitGuess);
 } //end window.onload
 
-var currentGame, currentGuess, values, solutionArray, valid;
+var currentGame, currentGuess, values, solutionArray, notValid;
 var solution;
 
 
