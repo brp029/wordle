@@ -14,8 +14,7 @@ window.onload = function() {
 	document.getElementById("submitGuess").addEventListener("click", submitGuess);
 } //end window.onload
 
-var currentGame, currentGuess, values, solutionArray, notValid;
-var solution;
+var currentGame, currentGuess, values, solutionArray, solution, valid, word;
 
 
 function getSolution() {
@@ -36,10 +35,33 @@ function getSolution() {
 
 function checkIfWord() {
 	
-	var req2 = new XMLHttpRequest();
-	req2.withCredentials = true;
+	// find submitted word
+	values = [];
+	if (currentGame.activeRow == "0") {
+		document.querySelectorAll("#row0 > .boxes").forEach(obj=>
+		{values.push(obj.innerHTML)})
+	}
+	else if (currentGame.activeRow == "1") {
+		document.querySelectorAll("#row1 > .boxes").forEach(obj=>
+		{values.push(obj.innerHTML)})
+	}
+	else if (currentGame.activeRow == "2") {
+		document.querySelectorAll("#row2 > .boxes").forEach(obj=>
+		{values.push(obj.innerHTML)})
+	}
+	else if (currentGame.activeRow == "3") {
+		document.querySelectorAll("#row3 > .boxes").forEach(obj=>
+		{values.push(obj.innerHTML)})
+	}
+	else if (currentGame.activeRow == "4") {
+		document.querySelectorAll("#row4 > .boxes").forEach(obj=>
+		{values.push(obj.innerHTML)})
+	}
+	else if (currentGame.activeRow == "5") {
+		document.querySelectorAll("#row5 > .boxes").forEach(obj=>
+		{values.push(obj.innerHTML)})
+	}
 	
-	console.log(values);
 	word = JSON.stringify(values);
 	word = word.replace("[", "");
 	word = word.replaceAll(",", "");
@@ -47,24 +69,29 @@ function checkIfWord() {
 	word = word.replaceAll('"', '');
 	console.log(word);
 	
-	req2.open("GET", "https://english-words2.p.rapidapi.com/?word="+word);
-	req2.setRequestHeader("X-RapidAPI-Key", "d5854d4252msha90e3c0562d13e4p17f839jsn0992e24ab6da");
-	req2.setRequestHeader("X-RapidAPI-Host", "english-words2.p.rapidapi.com");
+	//check to see if the word is valid
+	var req2 = new XMLHttpRequest();
+	
+	req2.open("GET", "https://www.dictionaryapi.com/api/v3/references/collegiate/json/"+word+"?key=c454bd4e-1aa5-4f81-abaf-7b9afda6d169");
 	req2.onreadystatechange = function() {
 		if (req2.readyState == 4) {
 			text = req2.responseText;
 			console.log(text);
-			if (text.includes("valid word")) {
-				notValid = true;
+			if (text.includes('"meta":')) {
+				valid = true;
+				scoreSubmission();
 			}
 			else {
-				notValid = false;
+				valid = false;
+				alert("Please enter a valid English word.");
+				clearGuess();
 			}
-			console.log(notValid);
+			console.log(valid);
 		}
 	}
 	req2.send();
 }
+
 
 function LetterSpace (id, value) {
 	this.id = id;
@@ -94,6 +121,7 @@ function buildBoard() {
 }
 
 function newGame() {
+	
 	getSolution();
 	currentGame = new Game(0, 0, 0, false, false, "pending", solution);
 	document.getElementById("row0").innerHTML = "";
@@ -109,7 +137,7 @@ function newGame() {
 	newRow();
 	document.getElementById("playAgain").style.visibility = "hidden";
 	document.getElementById("debugMode").style.visibility = "visible";
-
+	
 }
 
 function newRow() {
@@ -129,39 +157,21 @@ function newRow() {
 }
 
 
-function submitGuess() {
+async function submitGuess() {
 	
+	console.log(solution);
+	
+	await checkIfWord();
+	
+	console.log(valid);
+}
+
+function scoreSubmission() {
+	
+	console.log(valid);
 	currentGame.solution = solution;
 	solutionArray = solutionArr();
 	
-
-	values = [];
-	if (currentGame.activeRow == "0") {
-		document.querySelectorAll("#row0 > .boxes").forEach(obj=>
-		{values.push(obj.innerHTML)})
-	}
-	else if (currentGame.activeRow == "1") {
-		document.querySelectorAll("#row1 > .boxes").forEach(obj=>
-		{values.push(obj.innerHTML)})
-	}
-	else if (currentGame.activeRow == "2") {
-		document.querySelectorAll("#row2 > .boxes").forEach(obj=>
-		{values.push(obj.innerHTML)})
-	}
-	else if (currentGame.activeRow == "3") {
-		document.querySelectorAll("#row3 > .boxes").forEach(obj=>
-		{values.push(obj.innerHTML)})
-	}
-	else if (currentGame.activeRow == "4") {
-		document.querySelectorAll("#row4 > .boxes").forEach(obj=>
-		{values.push(obj.innerHTML)})
-	}
-	else if (currentGame.activeRow == "5") {
-		document.querySelectorAll("#row4 > .boxes").forEach(obj=>
-		{values.push(obj.innerHTML)})
-	}
-	
-	checkIfWord();
 	checkCorrect();
 	checkWin();
 	
@@ -180,7 +190,8 @@ function submitGuess() {
 		alert("The solution was " + solution + ". Better luck next time!")
 		document.getElementById("playAgain").style.visibility = "visible";
 	}
-}
+  }
+
 
 function solutionArr() {
 		answer = currentGame.solution;
@@ -210,6 +221,9 @@ function selectedLetter () {
 }
 
 function checkCorrect() {
+	
+	// check if there are duplicate letters in the array
+	let dupeCheck = solutionArray.some((val, i) => solutionArray.indexOf(val) !== i); // if true, there are dupilates in the array
 	//compare solution to guess
 	for (i = 0; i < 5; i++) {
 		if (solutionArray[i] == values[i]){  	//if correctly placed, turn green
