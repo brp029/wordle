@@ -221,37 +221,38 @@ function checkCorrect() {
 	
 	//compare solution to guess
 	for (i = 0; i < 5; i++) {
+		
 		if (solutionArray[i] == values[i]){  	//if correctly placed, turn green
 			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "green";
 			document.getElementById(values[i]).style.backgroundColor = "green";
 		}
-		else if	(solutionArray.indexOf(values[i]) != -1) {  //if incorrectly placed
+		else if (solutionArray.indexOf(values[i]) == -1)  {  // if letter is not in solution, turn grey
+			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "gray";
+			document.getElementById(values[i]).style.backgroundColor = "gray";
+		} // else if end	
+		else if	(solutionArray.indexOf(values[i]) != -1) {      //if incorrectly placed
 			// check for exact match of this letter
 			anyCorrectDupe = false;
-			for (k = 0; k < 5; k++) {
-				if (solutionArray[k] == values[k]){
+			for (k = 0; k < 5; k++) { 	//for start
+				if (solutionArray[k] == values[k]){ //if start
 					anyCorrectDupe = true;
-				}
-			}
-			if (anyCorrectDupe == true) {
+				}//if end
+			} // for end
+			if (anyCorrectDupe == true) { //if start
 				document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "gray";
 				document.getElementById(values[i]).style.backgroundColor = "gray";
-			}
-			else if (values.indexOf(values[i]) == i) {// if no exact match, is this the first intance?
+			} //if end
+			else if (values.indexOf(values[i]) == i) { // if no exact match, is this the first intance?
 			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "yellow";
 			document.getElementById(values[i]).style.backgroundColor = "yellow";
-			}
-			else {// if no exact match and not first instance, turn grey
+			} // else if end
+			else { // if no exact match and not first instance, turn grey
 			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "gray";
 			document.getElementById(values[i]).style.backgroundColor = "gray";
-			}
-		}
-		else {  //if not in solution, turn grey
-			document.getElementById(currentGame.activeRow + "-" + i).style.backgroundColor = "gray";
-			document.getElementById(values[i]).style.backgroundColor = "gray";
-		}
+			} // else end
+		} // else if end
 	}//end for loop
-	} //end function
+} //end function
 
 function checkWin() {
 	
