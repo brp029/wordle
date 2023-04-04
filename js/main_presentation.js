@@ -134,7 +134,8 @@ function newGame() {
 	newRow();
 	document.getElementById("playAgain").style.visibility = "hidden";
 	document.getElementById("debugMode").style.visibility = "visible";
-	
+	document.getElementById("debugMessage").innerHTML = "";
+	document.getElementById("debugMessage").style.visibility = "hidden";
 }
 
 function newRow() {
